@@ -3,7 +3,9 @@
  * La edición de la presente clase, sin expresa autorización
  * no esta permitida.
  */
-package netcerbero;
+package net.floodlightcontroller.netcerbero;
+
+import netcerbero.VentanaHistorial;
 
 /**
  *
@@ -16,10 +18,9 @@ public class NetCerbero {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        vistaPrincipal vp=new vistaPrincipal();
-        vp.setVisible(true);
-        String arg[]=null;
-        Historial.main(arg);
+        VentanaHistorial vh=new VentanaHistorial();
+        vh.centar();
+        vh.mostrar();
         
     }
     

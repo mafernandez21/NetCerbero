@@ -19,22 +19,22 @@ import java.util.logging.Logger;
 public class Historial {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private ArrayList<Item> core;
+    private ArrayList<Item> historial;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public Historial() {
-        this.core = new ArrayList();
+        this.historial = new ArrayList();
     }
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Getters and Setters">
     private void basurero() {
         Item item;
-        for (int i = this.core.size() - 1; i >= 0; i--) {
-            item = this.core.get(i);
+        for (int i = this.historial.size() - 1; i >= 0; i--) {
+            item = this.historial.get(i);
             if (item.getTTD() < 1) {
-                this.core.remove(i);
+                this.historial.remove(i);
             }
         }
     }
@@ -42,8 +42,8 @@ public class Historial {
     private void actualizarTTD() {
         Item item;
         try {
-            for (int i = this.core.size() - 1; i >= 0; i--) {
-                item = this.core.get(i);
+            for (int i = this.historial.size() - 1; i >= 0; i--) {
+                item = this.historial.get(i);
                 item.setTTD(item.getTTD() - 1);
             }
         } catch (IndexOutOfBoundsException ex) {
@@ -52,14 +52,23 @@ public class Historial {
         }
     }
 
-    public boolean put(Object item) {
+    /**
+     * La función put cada vez que ingresa un item a el historial, decrementa el
+     * tiempo TTD (Time To Death) de los items existentes, luego ingresa el
+     * nuevo item con un TTD por defecto (10).
+     *
+     * @param obj Objeto a ser ingresado al historial con TTD por defecto.
+     * @return VERDADERO si el ingreso fué exitoso, caso contrario devuelve
+     * FALSO
+     */
+    public boolean put(Object obj) {
         try {
-            if (item != null) {
-                if (!this.core.isEmpty()) {
+            if (obj != null) {
+                if (!this.historial.isEmpty()) {
                     this.actualizarTTD();
                 }
-                Item aux = new Item(item, Item.TTD_DEFAULT);
-                this.core.add(aux);
+                Item aux = new Item(obj, Item.TTD_DEFAULT);
+                this.historial.add(aux);
                 return true;
             } else {
                 return false;
@@ -69,14 +78,24 @@ public class Historial {
         }
     }
 
-    public boolean put(Object item, int ttd) {
+    /**
+     * La función put cada vez que ingresa un item a el historial, decrementa el
+     * tiempo TTD (Time To Death) de los items existentes, luego ingresa el
+     * nuevo item con un TTD definido al momento del ingreso.
+     *
+     * @param obj Objeto a ser ingresado al historial con TTD por defecto.
+     * @param ttd Time To Death TTD
+     * @return VERDADERO si el ingreso fué exitoso, caso contrario devuelve
+     * FALSO
+     */
+    public boolean put(Object obj, int ttd) {
         try {
-            if (item != null) {
-                if (!this.core.isEmpty()) {
+            if (obj != null) {
+                if (!this.historial.isEmpty()) {
                     this.actualizarTTD();
                 }
-                Item aux = new Item(item, ttd);
-                this.core.add(aux);
+                Item aux = new Item(obj, ttd);
+                this.historial.add(aux);
                 return true;
             } else {
                 return false;
@@ -86,34 +105,47 @@ public class Historial {
         }
     }
 
+    /**
+     * Devuelve el último objeto guardado en el historial con un TTD superior a 1
+     * @return Objeto guardado en el historial.
+     */
     public Object get() {
-        return this.core.get(this.core.size() - 1).get();
+        return this.historial.get(this.historial.size() - 1).get();
     }
 
+    /**
+     * Devuelve un objeto guardado en la posición idx del historial con un TTD
+     * superior a 1.
+     * @param idx Índice de búsqueda
+     * @return Objeto guardado en el historial en la posición idx.
+     */
     public Object get(int idx) {
-        return this.core.get(idx).get();
+        return this.historial.get(idx).get();
     }
 
     @Override
     public String toString() {
         Item item;
-        String s = "";
+        String s = "{";
         try {
-            for (int i = this.core.size() - 1; i >= 0; i--) {
-                item = this.core.get(i);
-                s += item.toString() + "\n";
+            for (int i = this.historial.size() - 1; i >= 0; i--) {
+                item = this.historial.get(i);
+                s += item.toString() + ",";
             }
         } catch (IndexOutOfBoundsException ex) {
         }
+        s=s.substring(0,s.length()-1);
+        s+="}";
         return s;
     }
 
     //</editor-fold>
+   
     //<editor-fold defaultstate="collapsed" desc="Método Main">
     public static void main(String[] args) {
         //TODO-Aquí va la lógica para iniciar la clase
         Historial v = new Historial();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             String o = "Objeto" + i;
             System.out.println("Insertando Objeto");
             v.put(o, 100);
@@ -125,7 +157,6 @@ public class Historial {
             }
         }
         System.exit(0);
-
     }
     //</editor-fold>
 
@@ -159,7 +190,7 @@ public class Historial {
 
         @Override
         public String toString() {
-            return "Item{" + "item=" + item.toString() + ", ttd=" + ttd + '}';
+            return "[item=" + item.toString() + ",ttd=" + ttd + "]";
         }
 
     }
